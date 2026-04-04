@@ -39,7 +39,7 @@ class FastScanner {
 			return Double.parseDouble(nextToken());
 		}
 	}
-public class SegmentTree {
+public class MinimumQuery {
     public static void main(String[] args) {
         FastScanner in=new FastScanner();
         int n=in.nextInt();
@@ -61,6 +61,7 @@ public class SegmentTree {
 
         int segmentLength = tpow * 2;
         long[] segment = new long[segmentLength];
+        Arrays.fill(segment,Integer.MAX_VALUE);
 
         int idx = tpow;
         int x = 0;
@@ -69,7 +70,7 @@ public class SegmentTree {
         }
 
         for (int i = tpow - 1; i >= 1; i--) {
-            segment[i] = segment[2*i] + segment[2 * i + 1];
+            segment[i] = Math.min(segment[2*i] ,segment[2 * i + 1]);
         }
         StringBuilder ans=new StringBuilder();
 
@@ -94,7 +95,7 @@ public class SegmentTree {
     public static long find(long[] segment,int start,int end,int start_range,int end_range,int node){
 
         if(start>end_range || end<start_range){
-            return 0;
+            return Integer.MAX_VALUE;
         }
       
         if((start>=start_range && end<=end_range)){
@@ -102,14 +103,14 @@ public class SegmentTree {
         }
         int mid=(start+end)/2;
         
-         return find(segment, start,mid, start_range, end_range,node*2)+find(segment, mid+1, end, start_range, end_range,node*2+1);
+         return Math.min(find(segment, start,mid, start_range, end_range,node*2),find(segment, mid+1, end, start_range, end_range,node*2+1));
             }
 
             public static void update(long[] segment,int idx,long updated_value){
                 segment[idx]=updated_value;
                 while(idx>=1){
                     int i=idx/2;
-                    segment[i]=segment[i*2]+segment[i*2+1];
+                    segment[i]=Math.min(segment[i*2],segment[i*2+1]);
                     idx=i;
                 }
 
